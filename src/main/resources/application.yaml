@@ -1,0 +1,48 @@
+spring:
+  application:
+    name: tracker
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/mydb
+    username: postgres
+    password: test1234
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  # kafka:
+  #   bootstrap-servers: localhost:9092
+  #   producer:
+  #     key-serializer: org.apache.kafka.common.serialization.StringSerializer
+  #     value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+  #   consumer:
+  #     group-id: my-app-group
+  #     auto-offset-reset: earliest
+  #     key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+  #     value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+  #     properties:
+  #       spring:
+  #         json:
+  #           trusted:
+  #             packages: "*"
+app:
+  jwt:
+    secret: "mysecretkeymysecretkeymysecretkey"
+    access-token-ttl-minutes: 15
+    refresh-token-ttl-days: 30
+    issuer: protein-expense-tracker
+  oauth:
+    google:
+      client-id: ${GOOGLE_CLIENT_ID:303078342878-0galecee2gn6js4tefe1vknujckvlj59.apps.googleusercontent.com}
+      tokeninfo-uri: https://oauth2.googleapis.com/tokeninfo
+server:
+  port: 6969
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
