@@ -5,6 +5,7 @@ import java.security.MessageDigest;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Base64;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -69,6 +70,13 @@ public class AuthServiceImpl implements AuthService {
         String hash = sha256(refreshToken);
         return refreshTokenRepository.findByTokenHashAndRevokedFalse(hash).flatMap(this::revoke).then();
     };
+
+    @Override
+    public Mono<Void> logoutAllForUser(UUID userId) {
+        return refreshTokenRepository.findAllByUserIdAndRevokedFalse(userId)
+                .flatMap(this::revoke)
+                .then();
+    }
 
     private Mono<User> findOrCreateUser(String providerKey, OAuthUserInfo user) {
         return userRepository.findByAuthProviderAndProviderUserId(providerKey, user.providerUserId())
