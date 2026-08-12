@@ -19,9 +19,9 @@ repositories {
 
 dependencies {
 	
-	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-	implementation("org.springframework.boot:spring-boot-starter-data-redis")
-	implementation("org.springframework.boot:spring-boot-starter-data-redis-reactive")
+	implementation("org.springframework.boot:spring-boot-starter-flyway")
+	// implementation("org.springframework.boot:spring-boot-starter-data-redis")
+	// implementation("org.springframework.boot:spring-boot-starter-data-redis-reactive")
 	implementation("org.springframework.boot:spring-boot-starter-kafka")
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
@@ -30,8 +30,8 @@ dependencies {
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	developmentOnly("org.springframework.boot:spring-boot-docker-compose")
 	annotationProcessor("org.projectlombok:lombok")
-	testImplementation("org.springframework.boot:spring-boot-starter-data-redis-reactive-test")
-	testImplementation("org.springframework.boot:spring-boot-starter-data-redis-test")
+	// testImplementation("org.springframework.boot:spring-boot-starter-data-redis-reactive-test")
+	// testImplementation("org.springframework.boot:spring-boot-starter-data-redis-test")
 	testImplementation("org.springframework.boot:spring-boot-starter-kafka-test")
 	testImplementation("org.springframework.boot:spring-boot-starter-security-test")
 	testImplementation("org.springframework.boot:spring-boot-starter-webflux-test")
@@ -44,12 +44,38 @@ dependencies {
 	runtimeOnly("org.postgresql:postgresql")
 	implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
   	testImplementation("org.springframework.boot:spring-boot-starter-data-r2dbc-test")
-	runtimeOnly("org.postgresql:r2dbc-postgresql:1.1.2.RELEASE")
+	runtimeOnly("org.postgresql:r2dbc-postgresql")
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	testImplementation("org.springframework.boot:spring-boot-starter-actuator-test")
-
+	implementation("org.flywaydb:flyway-core")
+    implementation("org.flywaydb:flyway-database-postgresql")
+	testImplementation("org.springframework.boot:spring-boot-starter-flyway-test")
 }
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+val migrateDb by tasks.registering(JavaExec::class) {
+	group = "database"
+	description = "Run Flyway migrations without starting the application"
+	classpath = sourceSets.main.get().runtimeClasspath
+	mainClass.set("com.example.tracker.DatabaseMigrateCommand")
+	args("migrate")
+}
+
+val resetDb by tasks.registering(JavaExec::class) {
+	group = "database"
+	description = "Drop the public schema and re-run Flyway migrations plus seed data"
+	classpath = sourceSets.main.get().runtimeClasspath
+	mainClass.set("com.example.tracker.DatabaseMigrateCommand")
+	args("reset")
+}
+
+val repairDb by tasks.registering(JavaExec::class) {
+	group = "database"
+	description = "Repair Flyway schema history after editing an applied migration"
+	classpath = sourceSets.main.get().runtimeClasspath
+	mainClass.set("com.example.tracker.DatabaseMigrateCommand")
+	args("repair")
 }

@@ -31,7 +31,7 @@ public class SecurityConfig {
                 // SecurityContext per-request; nothing is stored server-side.
                 .securityContextRepository(NoOpServerSecurityContextRepository.getInstance())
                 .authorizeExchange(exchange -> exchange
-                        .pathMatchers("/auth/**", "/actuator/health").permitAll()
+                        .pathMatchers("/api/auth/**", "/actuator/health").permitAll()
                         .pathMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyExchange().authenticated())
                 .httpBasic(httpBasic -> httpBasic.disable())

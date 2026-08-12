@@ -1,5 +1,7 @@
 package com.example.tracker.api.auth;
 
+import java.util.UUID;
+
 import jakarta.validation.constraints.NotBlank;
 
 public class AuthDTO {
@@ -12,6 +14,10 @@ public class AuthDTO {
     public record RefreshRequest(@NotBlank String refreshToken) {
     }
 
-    public record TokenResponse(String accessToken, String refreshToken, long expiresInSeconds) {
+    public record UserDto(UUID id, String email, String displayName, String role) {
+    }
+
+    public record TokenResponse(String accessToken, String refreshToken, long expiresIn, String tokenType,
+            UserDto user) {
     }
 }

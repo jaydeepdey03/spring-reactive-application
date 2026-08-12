@@ -2,6 +2,8 @@ package com.example.tracker.security.jwt;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,6 +19,7 @@ import reactor.core.publisher.Mono;
 public class JWTAuthenticationFilter implements WebFilter {
 
     private static final String BEARER_PREFIX = "Bearer ";
+    private static final Logger log = LoggerFactory.getLogger(JWTAuthenticationFilter.class);
 
     public final JWTService jwtService;
 
@@ -38,6 +41,10 @@ public class JWTAuthenticationFilter implements WebFilter {
             UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userPrincipal, null,
                     List.of(new SimpleGrantedAuthority("ROLE_" + claims.role().toString())));
             return chain.filter(exchange).contextWrite(ReactiveSecurityContextHolder.withAuthentication(auth));
-        }).onErrorResume(ex -> chain.filter(exchange));
+        }).onErrorResume(ex -> {
+            log.error("JWT auth failed for request: {} {}", exchange.getRequest().getMethod(),
+                    exchange.getRequest().getPath(), ex);
+            return chain.filter(exchange);
+        });
     }
 }

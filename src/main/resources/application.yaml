@@ -2,13 +2,16 @@ spring:
   application:
     name: tracker
   r2dbc:
-    url: r2dbc:postgresql://localhost:5432/mydb
-    username: postgres
-    password: test1234
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
+    url: ${SPRING_R2DBC_URL:r2dbc:postgresql://localhost:5432/mydb}
+    username: ${SPRING_R2DBC_USERNAME:postgres}
+    password: ${SPRING_R2DBC_PASSWORD:test1234}
+  flyway:
+    enabled: true
+    url: ${SPRING_FLYWAY_URL:jdbc:postgresql://localhost:5432/mydb}
+    user: ${SPRING_FLYWAY_USER:postgres}
+    password: ${SPRING_FLYWAY_PASSWORD:test1234}
+    locations: classpath:db/migration
+    clean-disabled: true
   data:
     redis:
       host: localhost

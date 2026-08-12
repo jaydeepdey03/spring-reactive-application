@@ -5,9 +5,11 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 import org.springframework.r2dbc.core.DatabaseClient;
+import org.springframework.stereotype.Component;
 
 import reactor.core.publisher.Mono;
 
+@Component("expenseSummaryUpdater")
 public class ExpenseSummaryUpdater implements SummaryUpdater {
     private static final String UPSERT_SQL = """
             INSERT INTO daily_expense_summary (id, user_id, summary_date, total_amount, entry_count, updated_at)

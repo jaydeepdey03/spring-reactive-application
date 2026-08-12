@@ -9,6 +9,7 @@ public interface AuthService {
 
     Mono<Void> logout(String refreshToken);
 
-    record AuthResult(String accessToken, String refreshToken, long expiresInSeconds) {
+    record AuthResult(String accessToken, String refreshToken, long expiresInSeconds,
+            com.example.tracker.domain.user.User user) {
     }
 }

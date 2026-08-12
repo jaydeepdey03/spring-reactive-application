@@ -35,3 +35,12 @@ out/
 
 ### VS Code ###
 .vscode/
+
+
+.agents
+AGENTS.md
+skills-*
+.clinerules
+.cursor
+.github
+.windsurf

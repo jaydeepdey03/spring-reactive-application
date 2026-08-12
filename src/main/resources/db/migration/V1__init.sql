@@ -1,3 +1,6 @@
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+CREATE SCHEMA IF NOT EXISTS public;
+SET search_path TO public;
 CREATE TABLE users (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     email VARCHAR(255) NOT NULL UNIQUE,
@@ -7,8 +10,10 @@ CREATE TABLE users (
     provider_user_id VARCHAR(255) NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    role VARCHAR(50) NOT NULL DEFAULT 'USER',
     version BIGINT NOT NULL DEFAULT 0,
-    UNIQUE (auth_provider, provider_user_id)
+    UNIQUE (auth_provider, provider_user_id),
+    CONSTRAINT users_role_check CHECK (role IN ('USER', 'ADMIN'))
 );
 CREATE TABLE refresh_tokens (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),

@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.stereotype.Service;
 
 import com.example.tracker.application.summary.SummaryUpdater;
 import com.example.tracker.domain.expense.DailyExpenseSummary;
@@ -21,6 +22,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.retry.Retry;
 
+@Service
 public class ExpenseServiceImpl implements ExpenseService {
     private final ExpenseEntryRepository expenseEntryRepository;
     private final DailyExpenseSummaryRepository summaryRepository;

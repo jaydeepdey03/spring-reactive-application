@@ -71,7 +71,7 @@ public class AuthServiceImpl implements AuthService {
     };
 
     private Mono<User> findOrCreateUser(String providerKey, OAuthUserInfo user) {
-        return userRepository.findByAuthProviderAndProviderUserId(providerKey, providerKey)
+        return userRepository.findByAuthProviderAndProviderUserId(providerKey, user.providerUserId())
                 .switchIfEmpty(Mono.defer(() -> {
                     Instant instant = Instant.now();
                     User newuser = User.builder().email(user.email()).displayName(user.displayName()).role(Role.USER)
@@ -96,7 +96,7 @@ public class AuthServiceImpl implements AuthService {
         RefreshToken refreshToken = RefreshToken.builder().tokenHash(sha256(generatedRefreshToken)).userId(user.getId())
                 .createdAt(now).expiresAt(expiry).revoked(false).build();
         return refreshTokenRepository.save(refreshToken)
-                .thenReturn(new AuthResult(accessToken, generatedRefreshToken, accessTokenTtlSeconds));
+                .thenReturn(new AuthResult(accessToken, generatedRefreshToken, accessTokenTtlSeconds, user));
 
     }
 

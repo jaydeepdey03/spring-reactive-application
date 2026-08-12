@@ -20,7 +20,7 @@ public class OAuthProviderFactory {
     }
 
     public OAuthProvider resolve(String providerKey) {
-        OAuthProvider provider = providerByKey.get(providerKey);
+        OAuthProvider provider = providerByKey.get(providerKey.toUpperCase());
 
         if (provider == null) {
             throw new UnsupportedAuthProviderException("Provider not found " + providerKey);

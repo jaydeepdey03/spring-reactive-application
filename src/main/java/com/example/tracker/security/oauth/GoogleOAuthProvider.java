@@ -52,15 +52,15 @@ public class GoogleOAuthProvider implements OAuthProvider {
             return Mono.error(new OAuthVerificationException("Token Mismatch"));
         }
 
-        String sub = claims.get("sub").toString();
-        String email = claims.get("email").toString();
-        String name = claims.get("name").toString();
+        Object sub = claims.get("sub");
+        Object email = claims.get("email");
+        Object name = claims.get("name");
 
         if (sub == null || email == null) {
             return Mono.error(new OAuthVerificationException("Google token missing claims"));
         }
 
-        return Mono.just(new OAuthUserInfo(sub, email, name));
+        return Mono.just(new OAuthUserInfo(sub.toString(), email.toString(), name != null ? name.toString() : null));
     }
 
 }
